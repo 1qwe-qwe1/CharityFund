@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="CharityFund - Благотворительная организация. Помощь детям, животным, пенсионерам.">
+    <title>CharityFund | Программы помощи</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+</head>
+<body class="bg-gray-50">
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center space-x-2">
+                    <img src="images/icon.png">
+                    <h1 class="text-xl font-bold text-gray-800">CharityFund</h1>
+                </div>
+
+                <nav aria-label="Основная навигация">
+                    <ul class="flex space-x-6 items-center">
+                        <li><a href="index.html" class="hover:text-blue-600 text-gray-600 font-medium" aria-current="page">Главная</a></li>
+                        <li><a href="list.html" class="text-blue-600 transition-colors">Программы</a></li>
+                        
+                        <!-- Имя пользователя -->
+                        <li id="user-name" class="hidden">
+                            <span class="text-gray-600">
+                                <span id="username-text"></span>
+                            </span>
+                        </li>
+                        
+                        <li id="logout-btn" class="hidden">
+                            <button onclick="logoutUser()" class="text-gray-600 hover:text-blue-600 transition-colors">Выйти</button>
+                        </li>
+                        
+                        <li id="login-btn">
+                            <a href="authorization.html" class="text-gray-600 hover:text-blue-600 transition-colors">Вход</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto p-4">
+        <div id="list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div class="text-center p-8 text-gray-500">Загрузка...</div>
+        </div>
+        
+    </main>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js";
+        import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-database.js";
+
+        const firebaseConfig = {
+           apiKey: "AIzaSyBsQRyGq_jMVsw_Uyr_PNt3IYllj-fsEYQ",
+           authDomain: "charityfund-af2de.firebaseapp.com",
+           databaseURL: "https://charityfund-af2de-default-rtdb.firebaseio.com",
+           projectId: "charityfund-af2de",
+           storageBucket: "charityfund-af2de.firebasestorage.app",
+           messagingSenderId: "804405065306",
+           appId: "1:804405065306:web:5993a3890c520823f2ca63",
+           measurementId: "G-7HWBMTP27X"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        let cart = [];;
+
+        async function loadList() {
+            try {
+                const snapshot = await get(ref(db, 'AssistancePrograms'));
+                if (snapshot.exists()) {
+                    const data = snapshot.val();
+                    cart = Object.entries(data).map(([id, cart]) => ({
+                        id,
+                        name: cart.Name || 'Без названия',
+                        description: cart.Description || '',
+                        image: cart.Image || ''
+                    }));
+                    showCart();
+                }
+            } catch (error) {
+                console.error('Ошибка:', error);
+            }
+        }
+
+        function showCart() {
+            const container = document.getElementById('list');
+            const noResults = document.getElementById('noResults');
+            
+            noResults.classList.add('hidden');
+            
+            // Отображение
+            container.innerHTML = filtered.map(cart => `
+                <div class="bg-white rounded-lg shadow p-4">
+                    <div class="h-40 bg-gray-200 rounded mb-3 flex items-center justify-center">
+                        ${cart.image ? 
+                            `<img src="images/${cart.image}" class="h-full object-cover rounded" onerror="this.style.display='none'">` :
+                            `<i class="fas fa-dice text-gray-400 text-4xl"></i>`
+                        }
+                    </div>
+                    <h3 class="font-bold text-lg mb-2">${cart.name}</h3>
+                    <p class="text-gray-600 text-sm mb-3">${cart.description.substring(0, 80)}...</p>
+                </div>
+            `).join('');
+        }
+    </script>
+</body>
+</html>

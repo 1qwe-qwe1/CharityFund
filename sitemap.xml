@@ -2,11 +2,22 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     
     <url>
-        <loc>https://</loc>
+        <loc>http://127.0.0.1:5500/frontend/index.html</loc>
         <lastmod>2025-12-23</lastmod>
         <changefreq>daily</changefreq>
         <priority>1.0</priority>
     </url>
-    
+    <url>
+        <loc>http://127.0.0.1:5500/frontend/authorization.html</loc>
+        <lastmod>2025-12-23</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>1.0</priority>
+    </url>
+    <url>
+        <loc>http://127.0.0.1:5500/frontend/list.html</loc>
+        <lastmod>2025-12-23</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>1.0</priority>
+    </url>
     
 </urlset>    
