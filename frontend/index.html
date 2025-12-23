@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="CharityFund - Благотворительная организация. Помощь детям, животным, пенсионерам.">
+    <title>CharityFund | Благотворительная организация</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" type="image/x-icon" href="images/icon16.png">
+</head>
+<body class="bg-gray-50">
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center space-x-2">
+                    <img src="images/icon.png">
+                    <h1 class="text-xl font-bold text-gray-800">CharityFund</h1>
+                </div>
+
+                <nav aria-label="Основная навигация">
+                    <ul class="flex space-x-6 items-center">
+                        <li><a href="index.html" class="text-blue-600 font-medium" aria-current="page">Главная</a></li>
+                        <li><a href="list.html" class="text-gray-600 hover:text-blue-600 transition-colors">Программы</a></li>
+                        
+                        <!-- Имя пользователя -->
+                        <li id="user-name" class="hidden">
+                            <span class="text-gray-600">
+                                <i class="fas fa-user mr-1" aria-hidden="true"></i>
+                                <span id="username-text"></span>
+                            </span>
+                        </li>
+                        
+                        <li id="logout-btn" class="hidden">
+                            <button onclick="logoutUser()" class="text-gray-600 hover:text-blue-600 transition-colors">
+                                Выйти
+                            </button>
+                        </li>
+                        
+                        <li id="login-btn">
+                            <a href="authorization.html" class="text-gray-600 hover:text-blue-600 transition-colors">
+                                Вход
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="bg-gradient-to-r from-blue-50 to-blue-100 py-12 md:py-20">
+            <div class="container mx-auto px-4">
+                <div class="flex flex-col md:flex-row items-center gap-8 md:gap-12">
+                    <div class="md:w-1/2">
+                        <h2 class="text-3xl md:text-4xl font-bold mb-4 text-gray-800">
+                            Добро — место, где легко помогать
+                        </h2>
+                        <p class="text-lg text-gray-600 mb-6 md:mb-8">
+                            Платформа для частных и корпоративных пожертвований
+                        </p>
+                        <div class="flex flex-col sm:flex-row gap-4">
+                            <a href="list.html" 
+                               class="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 text-center transition-colors duration-200">
+                                Перейти к программам помощи
+                            </a>
+                            <a href="authorization.html" 
+                               class="bg-white text-blue-600 border-2 border-blue-600 px-6 py-3 rounded-lg font-medium hover:bg-blue-50 text-center transition-colors duration-200">
+                                Личный кабинет
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="md:w-1/2 mt-8 md:mt-0">
+                        <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                            <img src="images/main.png" 
+                                 alt="Благотворительная организация CharityFund" 
+                                 class="w-full h-64 md:h-80 object-cover">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-6 md:mb-0">
+                    <div class="flex items-center space-x-2 mb-4">
+                        <img src="images/icon.png">
+                        <h3 class="text-xl font-bold">CharityFund</h3>
+                    </div>
+                    <p class="text-gray-400 text-sm">
+                        © 2025 CharityFund. Все права защищены.
+                    </p>
+                </div>
+                
+                <div class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-8">
+                    <div>
+                        <h4 class="font-semibold mb-2 text-blue-300">Контакты</h4>
+                        <ul class="space-y-1 text-sm text-gray-400">
+                            <li><i class="fas fa-phone mr-2" aria-hidden="true"></i> +7 (999) 123-45-67</li>
+                            <li><i class="fas fa-envelope mr-2" aria-hidden="true"></i> info@charityfund.ru</li>
+                        </ul>
+                    </div>
+                    
+                    <div>
+                        <h4 class="font-semibold mb-2 text-blue-300">Меню</h4>
+                        <ul class="space-y-1 text-sm">
+                            <li><a href="index.html" class="text-gray-400 hover:text-white transition-colors">Главная</a></li>
+                            <li><a href="list.html" class="text-gray-400 hover:text-white transition-colors">Программы</a></li>
+                            <li><a href="authorization.html" class="text-gray-400 hover:text-white transition-colors">Вход</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const userData = sessionStorage.getItem('user');
+            
+            if (userData) {
+                try {
+                    const user = JSON.parse(userData);
+                    
+                    const logoutBtn = document.getElementById('logout-btn');
+                    const loginBtn = document.getElementById('login-btn');
+                    
+                    if (logoutBtn) logoutBtn.classList.remove('hidden');
+                    if (loginBtn) loginBtn.classList.add('hidden');
+                    
+                    const userNameEl = document.getElementById('user-name');
+                    const usernameText = document.getElementById('username-text');
+                    
+                    if (userNameEl && usernameText) {
+                        usernameText.textContent = user.name || user.email || 'Пользователь';
+                        userNameEl.classList.remove('hidden');
+                    }
+                    
+                } catch (e) {
+                    console.error('Ошибка:', e);
+                }
+            }
+        });
+
+        function logoutUser() {
+            sessionStorage.removeItem('user');
+            localStorage.removeItem('savedEmail');
+            localStorage.removeItem('rememberMe');
+            
+            window.location.href = 'index.html';
+        }
+        
+        window.logoutUser = logoutUser;
+    </script>
+</body>
+</html>

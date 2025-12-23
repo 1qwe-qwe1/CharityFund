@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Регистрация в CharityFund - Благотворительная организация">
+    <title>Регистрация | CharityFund</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" type="image/x-icon" href="images/icon16.png">
+    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <style>
+        body {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            min-height: 100vh;
+        }
+        
+        .register-card {
+            background: white;
+            border-radius: 1rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-primary {
+            background-color: #2563eb;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            background-color: #1d4ed8;
+        }
+        
+        .input-field {
+            border: 2px solid #e5e7eb;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+            width: 100%;
+            transition: border-color 0.3s ease;
+        }
+        
+        .input-field:focus {
+            outline: none;
+            border-color: #2563eb;
+        }
+        
+        @media (max-width: 640px) {
+            .register-card {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center p-4">
+    <div class="register-card w-full max-w-md p-8">
+        <div class="text-center mb-8">
+            <div class="flex justify-center mb-4">
+                <img src="images/icon.png">
+            </div>
+            <h1 class="text-2xl font-bold text-gray-800">CharityFund</h1>
+            <p class="text-gray-600 mt-2">Регистрация аккаунта</p>
+        </div>
+        
+        <form id="registerForm" class="space-y-6">
+            <div>
+                <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
+                    Ваше имя
+                </label>
+                <input 
+                    type="text" 
+                    id="name" 
+                    class="input-field"
+                    placeholder="Иван Иванов"
+                    required
+                >
+            </div>
+            
+            <div>
+                <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
+                    Email адрес
+                </label>
+                <input 
+                    type="email" 
+                    id="email" 
+                    class="input-field"
+                    placeholder="ваш@email.com"
+                    required
+                >
+            </div>
+            
+            <div>
+                <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
+                    Пароль
+                </label>
+                <input 
+                    type="password" 
+                    id="password" 
+                    class="input-field"
+                    placeholder="Придумайте пароль"
+                    required
+                >
+            </div>
+            
+            <div>
+                <label for="confirmPassword" class="block text-sm font-medium text-gray-700 mb-2">
+                    Подтвердите пароль
+                </label>
+                <input 
+                    type="password" 
+                    id="confirmPassword" 
+                    class="input-field"
+                    placeholder="Повторите пароль"
+                    required
+                >
+            </div>
+            
+            <button 
+                type="submit" 
+                class="btn-primary w-full py-3 text-lg"
+                id="submitBtn"
+            >
+                Зарегистрироваться
+            </button>
+            
+            <div class="text-center space-y-3 pt-4">
+                <div class="text-gray-600 text-sm">
+                    Уже есть аккаунт? 
+                    <a href="authorization.html" class="text-blue-600 hover:text-blue-800 font-medium">
+                        Войти
+                    </a>
+                </div>
+                <div class="pt-4">
+                    <a href="index.html" class="text-gray-500 hover:text-gray-700 text-sm">
+                        Вернуться на главную
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js";
+        import { getDatabase, ref, get, set } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-database.js";
+
+        const firebaseConfig = {
+           apiKey: "AIzaSyBsQRyGq_jMVsw_Uyr_PNt3IYllj-fsEYQ",
+           authDomain: "charityfund-af2de.firebaseapp.com",
+           databaseURL: "https://charityfund-af2de-default-rtdb.firebaseio.com",
+           projectId: "charityfund-af2de",
+           storageBucket: "charityfund-af2de.firebasestorage.app",
+           messagingSenderId: "804405065306",
+           appId: "1:804405065306:web:5993a3890c520823f2ca63",
+           measurementId: "G-7HWBMTP27X"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (password !== confirmPassword) {
+                Swal.fire({
+                    icon: "error",
+                    title: "Ошибка",
+                    text: "Пароли не совпадают!"
+                });
+                return;
+            }
+
+            try {
+                // Проверка существующих пользователей
+                const snapshot = await get(ref(db, 'Authorization'));
+                const users = snapshot.val() || {};
+                
+                const existingUser = Object.values(users).find(u => u.Login === email);
+                if (existingUser) {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Ошибка",
+                        text: "Пользователь с таким email уже существует!"
+                    });
+                    return;
+                }
+
+                const nextId = Object.keys(users).length > 0 
+                    ? Math.max(...Object.keys(users).map(Number)) + 1 
+                    : 1;
+
+                const newUser = {
+                    ID_PersonalAccount: nextId,
+                    Login: email,
+                    Password: password,
+                    Name: name,
+                    ID_Post: "2" 
+                };
+
+                await set(ref(db, `Authorization/${nextId}`), newUser);
+
+                sessionStorage.setItem('user', JSON.stringify({
+                    id: nextId,
+                    email: email,
+                    name: name,
+                    role: "2"
+                }));
+
+                Swal.fire({
+                    icon: "success",
+                    title: "Успешно!",
+                    text: "Регистрация завершена",
+                    timer: 1500,
+                    showConfirmButton: false,
+                    willClose: () => {
+                        window.location.href = 'index.html';
+                    }
+                });
+
+            } catch (error) {
+                console.error('Ошибка:', error);
+                Swal.fire({
+                    icon: "error",
+                    title: "Ошибка",
+                    text: "Ошибка при регистрации"
+                });
+            }
+        });
+    </script>
+</body>
+</html>
